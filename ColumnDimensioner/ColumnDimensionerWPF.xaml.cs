@@ -1,18 +1,9 @@
 ﻿using Autodesk.Revit.DB;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace ColumnDimensioner
 {
@@ -27,14 +18,14 @@ namespace ColumnDimensioner
         public bool IndentationSecondRowDimensionsIsChecked;
         public string IndentationSecondRowDimensions;
         ColumnDimensionerSettings ColumnDimensionerSettingsItem = null;
-        public ColumnDimensionerWPF(List <DimensionType> dimensionTypesList)
+        public ColumnDimensionerWPF(List<DimensionType> dimensionTypesList)
         {
             ColumnDimensionerSettingsItem = new ColumnDimensionerSettings().GetSettings();
             InitializeComponent();
             comboBox_DimensionType.ItemsSource = dimensionTypesList;
             comboBox_DimensionType.DisplayMemberPath = "Name";
 
-            if(ColumnDimensionerSettingsItem != null)
+            if (ColumnDimensionerSettingsItem != null)
             {
                 if (ColumnDimensionerSettingsItem.DimensionColumnsButtonName == "radioButton_VisibleInView")
                 {
@@ -124,7 +115,7 @@ namespace ColumnDimensioner
 
         private void checkBox_IndentationFirstRowDimensions_Checked(object sender, RoutedEventArgs e)
         {
-            if((bool)checkBox_IndentationFirstRowDimensions.IsChecked)
+            if ((bool)checkBox_IndentationFirstRowDimensions.IsChecked)
             {
                 label_IndentationFirstRowDimensions.IsEnabled = true;
                 textBox_IndentationFirstRowDimensions.IsEnabled = true;
@@ -140,7 +131,7 @@ namespace ColumnDimensioner
 
         private void checkBox_IndentationSecondRowDimensions_Checked(object sender, RoutedEventArgs e)
         {
-            if((bool)checkBox_IndentationSecondRowDimensions.IsChecked)
+            if ((bool)checkBox_IndentationSecondRowDimensions.IsChecked)
             {
                 label_IndentationSecondRowDimensions.IsEnabled = true;
                 textBox_IndentationSecondRowDimensions.IsEnabled = true;

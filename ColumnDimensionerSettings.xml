@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <ColumnDimensionerSettings xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <DimensionColumnsButtonName>radioButton_VisibleInView</DimensionColumnsButtonName>
+  <DimensionColumnsButtonName>radioButton_Selected</DimensionColumnsButtonName>
   <SelectedDimensionTypeName>00.Точн 3 знака (прозр)</SelectedDimensionTypeName>
   <IndentationFirstRowDimensionsIsChecked>true</IndentationFirstRowDimensionsIsChecked>
   <IndentationFirstRowDimensions>800</IndentationFirstRowDimensions>

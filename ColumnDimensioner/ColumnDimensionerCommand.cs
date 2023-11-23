@@ -3,11 +3,9 @@ using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+using System.Reflection;
 
 namespace ColumnDimensioner
 {
@@ -16,6 +14,12 @@ namespace ColumnDimensioner
     {
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
+            try
+            {
+                GetPluginStartInfo();
+            }
+            catch { }
+
             Document doc = commandData.Application.ActiveUIDocument.Document;
             Selection sel = commandData.Application.ActiveUIDocument.Selection;
             Autodesk.Revit.DB.View activeView = doc.ActiveView;
@@ -81,7 +85,7 @@ namespace ColumnDimensioner
                 }
             }
 
-            if(columnsList.Count == 0)
+            if (columnsList.Count == 0)
             {
                 TaskDialog.Show("Revit", "Не выбрано ни одной колонны!");
                 return Result.Cancelled;
@@ -190,7 +194,7 @@ namespace ColumnDimensioner
                         referenceArrayHandOrientation.Append(face.Reference);
                     }
 
-                    if(IndentationSecondRowDimensionsIsChecked)
+                    if (IndentationSecondRowDimensionsIsChecked)
                     {
                         Dimension mainDimensionHandOrientation = null;
                         using (Transaction t = new Transaction(doc))
@@ -242,7 +246,7 @@ namespace ColumnDimensioner
                         }
                     }
 
-                    if(indentationFirstRowDimensionsIsChecked)
+                    if (indentationFirstRowDimensionsIsChecked)
                     {
                         //Найти ось пересекающую колонну перпендикулярно HandOrientation
                         bool flagHandOrientation = false;
@@ -339,8 +343,6 @@ namespace ColumnDimensioner
                             }
                         }
                     }
-                    
-
 
                     //Линия вдоль FacingOrientation
                     XYZ facingOrientationCurvePStart = columnLocationPoint + columnWeight / 2 * columnFacingOrientation.Negate();
@@ -532,7 +534,7 @@ namespace ColumnDimensioner
                 if (null != instance)
                 {
                     Transform transform = instance.Transform;
-                    if(instance.GetSymbolGeometry().Count() != 0)
+                    if (instance.GetSymbolGeometry().Count() != 0)
                     {
                         foreach (GeometryObject instObj in instance.GetSymbolGeometry())
                         {
@@ -580,7 +582,7 @@ namespace ColumnDimensioner
                                     if (face.ComputeNormal(uV).IsAlmostEqualTo(column.HandOrientation)
                                         || face.ComputeNormal(uV).IsAlmostEqualTo(column.HandOrientation.Negate()))
                                     {
-                                        if(facesList.FirstOrDefault(f => f.ComputeNormal(uV).IsAlmostEqualTo(face.ComputeNormal(uV))) == null)
+                                        if (facesList.FirstOrDefault(f => f.ComputeNormal(uV).IsAlmostEqualTo(face.ComputeNormal(uV))) == null)
                                         {
                                             facesList.Add(face);
                                         }
@@ -618,6 +620,27 @@ namespace ColumnDimensioner
                 }
             }
             return tempColumnsList;
+        }
+        private static void GetPluginStartInfo()
+        {
+            // Получаем сборку, в которой выполняется текущий код
+            Assembly thisAssembly = Assembly.GetExecutingAssembly();
+            string assemblyName = "ColumnDimensioner";
+            string assemblyNameRus = "Образмерить колонны";
+            string assemblyFolderPath = Path.GetDirectoryName(thisAssembly.Location);
+
+            int lastBackslashIndex = assemblyFolderPath.LastIndexOf("\\");
+            string dllPath = assemblyFolderPath.Substring(0, lastBackslashIndex + 1) + "PluginInfoCollector\\PluginInfoCollector.dll";
+
+            Assembly assembly = Assembly.LoadFrom(dllPath);
+            Type type = assembly.GetType("PluginInfoCollector.InfoCollector");
+            var constructor = type.GetConstructor(new Type[] { typeof(string), typeof(string) });
+
+            if (type != null)
+            {
+                // Создание экземпляра класса
+                object instance = Activator.CreateInstance(type, new object[] { assemblyName, assemblyNameRus });
+            }
         }
     }
 }
